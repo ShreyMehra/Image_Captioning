@@ -2,25 +2,26 @@ import easyocr as ocr  #OCR
 import streamlit as st  #Web App
 from PIL import Image #Image Processing
 import numpy as np #Image Processing 
+from transformers import AutoProcessor, Blip2ForConditionalGeneration
+import torch
+
 
 #title
-st.title("Easy OCR - Extract Text from Images")
+st.title("Image Captioner - Caption the images")
 
-#subtitle
-st.markdown("## Optical Character Recognition - Using `easyocr`, `streamlit` -  hosted on 🤗 Spaces")
-
-st.markdown("Link to the app - [image-to-text-app on 🤗 Spaces](https://huggingface.co/spaces/Amrrs/image-to-text-app)")
+st.markdown("Link to the model - [Image-to-Caption-App on 🤗 Spaces](https://huggingface.co/spaces/Shrey23/Image-Captioning)")
 
 #image uploader
 image = st.file_uploader(label = "Upload your image here",type=['png','jpg','jpeg'])
 
 
 @st.cache
-def load_model(): 
-    reader = ocr.Reader(['en'],model_storage_directory='.')
-    return reader 
-
-reader = load_model() #load model
+def load_model():
+    processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
+    model = Blip2ForConditionalGeneration.from_pretrained("Shrey23/Image-Captioning", device_map="auto", load_in_8bit=True)
+    return processor, model
+    
+processor, model = load_model() #load model
 
 if image is not None:
 
@@ -28,18 +29,17 @@ if image is not None:
     st.image(input_image) #display image
 
     with st.spinner("🤖 AI is at Work! "):
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        inputs = processor(images=image, return_tensors="pt").to(device, torch.float16)
+        pixel_values = inputs.pixel_values
+
+
+        generated_ids = model.generate(pixel_values=pixel_values, max_length=25)
+        generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+        st.write(generated_caption)
         
-
-        result = reader.readtext(np.array(input_image))
-
-        result_text = [] #empty list for results
-
-
-        for text in result:
-            result_text.append(text[1])
-
-        st.write(result_text)
-    #st.success("Here you go!")
+    st.success("Here you go!")
     st.balloons()
 else:
     st.write("Upload an Image")
