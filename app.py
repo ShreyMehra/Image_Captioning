@@ -17,7 +17,7 @@ image = st.file_uploader(label = "Upload your image here",type=['png','jpg','jpe
 def load_model():
     peft_model_id = "Shrey23/Image-Captioning"
     config = PeftConfig.from_pretrained(peft_model_id)
-    model = Blip2ForConditionalGeneration.from_pretrained(config.base_model_name_or_path, device_map="auto", offload="offload", torch_dtype=torch.float16) #, load_in_8bit=True
+    model = Blip2ForConditionalGeneration.from_pretrained(config.base_model_name_or_path, device_map="auto",  torch_dtype=torch.float16) #, load_in_8bit=True
     model = PeftModel.from_pretrained(model, peft_model_id)
 
     processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
