@@ -14,6 +14,7 @@ st.markdown("Link to the model - [Image-to-Caption-App on 🤗 Spaces](https://h
 #image uploader
 image = st.file_uploader(label = "Upload your image here",type=['png','jpg','jpeg'])
 
+@st.cache_data
 def load_model():
     peft_model_id = "Shrey23/Image-Captioning"
     config = PeftConfig.from_pretrained(peft_model_id)
@@ -24,11 +25,7 @@ def load_model():
     return processor, model
 
 
-if "dict" not in st.session_state:
-    processor, model = load_model() #load model
-    st.session_state.dict = {}
-    st.session_state.dict['processor'] = processor
-    st.session_state.dict['model'] = model
+processor, model = load_model() #load model
 
     
 
