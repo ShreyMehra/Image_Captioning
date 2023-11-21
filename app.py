@@ -36,12 +36,12 @@ if image is not None:
 
     with st.spinner("🤖 AI is at Work! "):
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        inputs = st.session_state.dict['processor'](images=image, return_tensors="pt").to(device, torch.float16)
+        inputs = processor(images=image, return_tensors="pt").to(device, torch.float16)
         pixel_values = inputs.pixel_values
 
 
-        generated_ids = st.session_state.dict['model'].generate(pixel_values=pixel_values, max_length=25)
-        generated_caption = st.session_state.dict['processor'].batch_decode(generated_ids, skip_special_tokens=True)[0]
+        generated_ids = model.generate(pixel_values=pixel_values, max_length=25)
+        generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
         st.write(generated_caption)
         
