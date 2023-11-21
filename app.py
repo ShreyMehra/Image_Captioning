@@ -3,6 +3,7 @@ from PIL import Image #Image Processing
 import numpy as np #Image Processing 
 from transformers import AutoProcessor, Blip2ForConditionalGeneration
 import torch
+from peft import PeftModel, PeftConfig
 
 
 #title
@@ -16,8 +17,12 @@ image = st.file_uploader(label = "Upload your image here",type=['png','jpg','jpe
 
 @st.cache
 def load_model():
+    peft_model_id = "Shrey23/Image-Captioning"
+    config = PeftConfig.from_pretrained(peft_model_id)
+    model = Blip2ForConditionalGeneration.from_pretrained(config.base_model_name_or_path, load_in_8bit=True, device_map="auto")
+    model = PeftModel.from_pretrained(model, peft_model_id)
+
     processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
-    model = Blip2ForConditionalGeneration.from_pretrained("Shrey23/Image-Captioning", device_map="auto", )
     return processor, model
     
 processor, model = load_model() #load model
