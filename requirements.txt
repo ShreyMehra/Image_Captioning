@@ -6,3 +6,4 @@ transformers
 accelerate
 bitsandbytes==0.41.2
 peft
+scipy
