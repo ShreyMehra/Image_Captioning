@@ -17,7 +17,7 @@ image = st.file_uploader(label = "Upload your image here",type=['png','jpg','jpe
 @st.cache
 def load_model():
     processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
-    model = Blip2ForConditionalGeneration.from_pretrained("Shrey23/Image-Captioning", device_map="auto", load_in_8bit=True)
+    model = Blip2ForConditionalGeneration.from_pretrained("Shrey23/Image-Captioning", device_map="auto", )
     return processor, model
     
 processor, model = load_model() #load model
