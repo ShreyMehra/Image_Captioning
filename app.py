@@ -14,8 +14,6 @@ st.markdown("Link to the model - [Image-to-Caption-App on 🤗 Spaces](https://h
 #image uploader
 image = st.file_uploader(label = "Upload your image here",type=['png','jpg','jpeg'])
 
-
-@st.cache
 def load_model():
     peft_model_id = "Shrey23/Image-Captioning"
     config = PeftConfig.from_pretrained(peft_model_id)
@@ -24,8 +22,15 @@ def load_model():
 
     processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
     return processor, model
+
+
+if "model" not in st.session_state:
+    processor, model = load_model() #load model
+    st.session_state.dict = {}
+    st.session_state.dict['processor'] = processor
+    st.session_state.dict['model'] = model
+
     
-processor, model = load_model() #load model
 
 if image is not None:
 
@@ -34,12 +39,12 @@ if image is not None:
 
     with st.spinner("🤖 AI is at Work! "):
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        inputs = processor(images=image, return_tensors="pt").to(device, torch.float16)
+        inputs = st.session_state.dict['processor'](images=image, return_tensors="pt").to(device, torch.float16)
         pixel_values = inputs.pixel_values
 
 
-        generated_ids = model.generate(pixel_values=pixel_values, max_length=25)
-        generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        generated_ids = st.session_state.dict['model'].generate(pixel_values=pixel_values, max_length=25)
+        generated_caption = st.session_state.dict['processor'].batch_decode(generated_ids, skip_special_tokens=True)[0]
 
         st.write(generated_caption)
         
