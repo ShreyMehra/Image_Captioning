@@ -24,7 +24,7 @@ def load_model():
     return processor, model
 
 
-if "model" not in st.session_state:
+if "dict" not in st.session_state:
     processor, model = load_model() #load model
     st.session_state.dict = {}
     st.session_state.dict['processor'] = processor
