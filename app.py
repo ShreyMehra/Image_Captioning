@@ -17,10 +17,11 @@ st.markdown("Link to the model - [Image-to-Caption-App on 🤗 Spaces](https://h
 
 class UI:
     def __init__(self):
-        model = Model()
-        model.load_model()
+        mod = Model()
+        mod.load_model()
 
     def displayUI(self):
+        print("display")
         image = st.file_uploader(label = "Upload your image here",type=['png','jpg','jpeg'])
         if image is not None:
 
@@ -67,6 +68,7 @@ class Model:
 
 def main():
     ui = UI()
+    print("dis")
     ui.displayUI()
 
 if __name__ == "__main__":
