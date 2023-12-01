@@ -21,7 +21,6 @@ class UI:
         mod.load_model()
 
     def displayUI(self):
-        print("display")
         image = st.file_uploader(label = "Upload your image here",type=['png','jpg','jpeg'])
         if image is not None:
 
@@ -30,10 +29,13 @@ class UI:
 
             with st.spinner("🤖 AI is at Work! "):
                 device = "cuda" if torch.cuda.is_available() else "cpu"
+                print(device, 1)
                 inputs = processor(images=image, return_tensors="pt").to(device, torch.float16)
+
+                print(2)
                 pixel_values = inputs.pixel_values
 
-
+                print(3)
                 generated_ids = model.generate(pixel_values=pixel_values, max_length=25)
                 generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
@@ -68,7 +70,6 @@ class Model:
 
 def main():
     ui = UI()
-    print("dis")
     ui.displayUI()
 
 if __name__ == "__main__":
