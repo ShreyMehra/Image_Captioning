@@ -47,7 +47,7 @@ class UI:
                         
 
 class Model:
-    def load_model():
+    def load_model(self):
         peft_model_id = "Shrey23/Image-Captioning"
         config = PeftConfig.from_pretrained(peft_model_id)
         global model
