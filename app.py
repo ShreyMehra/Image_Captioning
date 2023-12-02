@@ -29,7 +29,7 @@ class UI:
 
             with st.spinner("🤖 AI is at Work! "):
                 device = "cuda" if torch.cuda.is_available() else "cpu"
-                print(device, 1)
+                print(1)
                 inputs = processor(images=input_image, return_tensors="pt").to(device, torch.float32)
 
                 print(2)
