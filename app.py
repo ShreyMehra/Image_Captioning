@@ -61,10 +61,12 @@ class Model:
         # config = PeftConfig.from_pretrained(peft_model_id)
         global model
         global processor
-        PATH = "./model/"
-        local_files_only=True
+        PATH = "model/"
         model = Blip2ForConditionalGeneration.from_pretrained(PATH, local_files_only=True, low_cpu_mem_usage=True, torch_dtype=torch.float16) #, device_map="auto", load_in_8bit=True
+        print(-1)
         model = PeftModel.from_pretrained(model, peft_model_id)
+
+        print(-2)
         processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
 
 def main():
