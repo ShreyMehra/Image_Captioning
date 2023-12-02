@@ -49,7 +49,7 @@ class UI:
         else:
             st.write("Upload an Image")
 
-        st.caption("Made with ❤️ by @1littlecoder. Credits to 🤗 Spaces for Hosting this ")
+        st.caption("NN Practical Project.")
                         
 
 class Model:
@@ -58,19 +58,9 @@ class Model:
         config = PeftConfig.from_pretrained(peft_model_id)
         global model
         global processor
-        model = Blip2ForConditionalGeneration.from_pretrained(config.base_model_name_or_path, low_cpu_mem_usage=True, torch_dtype=torch.float16) #, device_map="auto", load_in_8bit=True
-        model.params = model.to_fp32(model.params)
+        model = Blip2ForConditionalGeneration.from_pretrained(config.base_model_name_or_path, low_cpu_mem_usage=True, torch_dtype=torch.float32) #, device_map="auto", load_in_8bit=True
         model = PeftModel.from_pretrained(model, peft_model_id)
         processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
-
-    def query(self , payload):
-        response = requests.post(self.API_URL, headers=self.headers, json=payload)
-        return response.content
-
-    def generate_response(self, prompt):
-        image_bytes = self.query({ "inputs": prompt, })
-        return io.BytesIO(image_bytes)
-
 
 def main():
     ui = UI()
