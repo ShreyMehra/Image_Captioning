@@ -34,8 +34,13 @@ class UI:
 
                 print(2)
                 pixel_values = inputs.pixel_values
-
+                
                 print(3)
+                pixel_values = pixel_values.to(torch.float32)
+
+                print(4)
+                model = model.to(torch.float32)
+
                 generated_ids = model.generate(pixel_values=pixel_values, max_length=25)
                 generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
