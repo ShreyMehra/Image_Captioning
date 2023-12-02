@@ -39,8 +39,6 @@ class UI:
                 pixel_values = pixel_values.to(torch.float32)
 
                 print(4)
-                model = model.to(torch.float32)
-
                 generated_ids = model.generate(pixel_values=pixel_values, max_length=25)
                 generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
@@ -61,7 +59,8 @@ class Model:
         global model
         global processor
         model = Blip2ForConditionalGeneration.from_pretrained(config.base_model_name_or_path, low_cpu_mem_usage=True, torch_dtype=torch.float16) #, device_map="auto", load_in_8bit=True
-        model = PeftModel.from_pretrained(model, peft_model_id)
+        model = PeftModel.from_pretrained(model, peft_model_id).to(torch.float32)
+
         processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
 
     def query(self , payload):
