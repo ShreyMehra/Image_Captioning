@@ -28,8 +28,8 @@ class UI:
 
             with st.spinner("🤖 AI is at Work! "):
                 device = "cuda" if torch.cuda.is_available() else "cpu"
-                print(1)
-                inputs = processor(images=input_image, return_tensors="pt").to(device, torch.float32)
+                print(1, device)
+                inputs = processor(images=input_image, return_tensors="pt").to(device, torch.float16)
 
                 print(2)
                 pixel_values = inputs.pixel_values
@@ -38,7 +38,7 @@ class UI:
                 # pixel_values = pixel_values.to(torch.float32)
 
                 print(3)
-                generated_ids = model.to(device, torch.float32).generate(pixel_values=pixel_values, max_length=25)
+                generated_ids = model.generate(pixel_values=pixel_values, max_length=25) #.to(device, torch.float32)
                 
                 print(4)
                 generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
@@ -58,7 +58,7 @@ class Model:
     def load_model(self):
         global model
         global processor
-        model = Blip2ForConditionalGeneration.from_pretrained("Shrey23/Image-Captioning",  torch_dtype=torch.float16) #, device_map="auto", load_in_8bit=True
+        model = Blip2ForConditionalGeneration.from_pretrained("Shrey23/Image-Captioning", device_map="auto", load_in_8bit=True, torch_dtype=torch.float16) #, 
         processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
 
 def main():
